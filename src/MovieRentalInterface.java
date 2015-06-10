@@ -9,30 +9,30 @@ public interface MovieRentalInterface extends Remote {
     /*
      * Return All information of all movies of MovieRental
      * */
-    public String getAllMovies()  throws RemoteException;
+    public Response getAllMovies()  throws RemoteException;
     /*
     * Return all titles and years of MovieRental
     * */
-    public String getAllNamesAndYears() throws RemoteException;
+    public Response getAllNamesAndYears() throws RemoteException;
     /*
     * Returns a list of all the movies from the past type
     * */
-    public String getAllTitlesAndYearByGenre(String genre) throws RemoteException;
+    public Response getAllTitlesAndYearByGenre(String genre) throws RemoteException;
     /*
     * Return the synopsis of the movie past
     * */
-    public String getSynopsisById (String identifier) throws RemoteException;
+    public Response getSynopsisById (String identifier) throws RemoteException;
     /*
     * Return the all info of the movie past
     * */
-    public String getInfoById (String idenfifier) throws RemoteException;
+    public Response getInfoById (String idenfifier) throws RemoteException;
     /*
     * Change the quantity available of the movie past
     * */
-    public void setQuantityOfMovie (String identifier, int quantity) throws RemoteException;
+    public Response setQuantityOfMovie (String identifier, int quantity) throws RemoteException;
     /*
     * Return the Quantity Disponible of the movie past
     * */
-    public String getQuantityOfMovie (String identifier) throws RemoteException;
+    public Response getQuantityOfMovie (String identifier) throws RemoteException;
 
 }
