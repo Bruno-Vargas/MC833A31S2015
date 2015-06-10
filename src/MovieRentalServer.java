@@ -7,7 +7,7 @@ import java.rmi.server.*;
 import java.rmi.registry.*;
 import java.util.List;
 
-public class Rental extends UnicastRemoteObject implements RentalInterface
+public class MovieRentalServer extends UnicastRemoteObject implements MovieRentalInterface
 {
     private Vector <Movie> movies;
     /*
@@ -21,7 +21,7 @@ public class Rental extends UnicastRemoteObject implements RentalInterface
         private int quantity;
     **/
 
-    public Rental()  throws RemoteException{
+    public MovieRentalServer()  throws RemoteException{
         this.movies = new Vector<Movie>();
 
         Movie movie1 = new Movie("Termianor", "ScienceFiction", "James Cameron", "", 1984, 108.f, 1, 2);
@@ -53,8 +53,8 @@ public class Rental extends UnicastRemoteObject implements RentalInterface
     /*
     * Return All information of all movies of MovieRental
     * */
-    public String getAllMovies() throws RemoteException {
-        long start, end;
+    public Response getAllMovies() throws RemoteException {
+        long start, end, diff;
         start = System.nanoTime();
 
         StringBuilder stringBuilder = new StringBuilder();
@@ -64,14 +64,18 @@ public class Rental extends UnicastRemoteObject implements RentalInterface
 
         String str = stringBuilder.toString();
         end = System.nanoTime();
-        System.err.println((end-start));
-        return str;
+        diff = end-start;
+        System.err.println((diff));
+
+        Response response = new Response(str, diff);
+
+        return response;
     }
     /*
     * Return all titles and years of MovieRental
     * */
-    public String getAllNamesAndYears() throws RemoteException {
-        long start, end;
+    public Response getAllNamesAndYears() throws RemoteException {
+        long start, end, diff;
         start = System.nanoTime();
 
         StringBuilder stringBuilder = new StringBuilder();
@@ -81,12 +85,142 @@ public class Rental extends UnicastRemoteObject implements RentalInterface
 
         String str = stringBuilder.toString();
         end = System.nanoTime();
-        System.err.println((end-start));
-        return str;    }
+        diff = end-start;
+        System.err.println(diff);
+        
+        Response response = new Response(str, diff);
+
+        System.err.println(response.toString());
+
+        return response;  
+    }
+    /*
+    * Returns a list of all the movies from the past type
+    * */
+    public Response getAllTitlesAndYearByGenre(String genre) throws RemoteException{
+        long start, end, diff;
+        start = System.nanoTime();
+        int aux = Integer.parseInt(genre);
+        String str;
+        switch (aux)
+        {
+            case  0:
+                 str  = getAllAdventureMovies();
+                 break;
+            case  1:
+                 str = getAllRomanceMovies();
+                 break;
+            case  2:
+                str = getAllSciFiMovies();
+                break;
+            default:
+                str = "";
+                break;
+        }
+
+        end = System.nanoTime();
+        diff = end-start;
+        System.err.println(diff);
+        
+        Response response = new Response(str, diff);
+
+        return response;
+    }
+
+    /*
+    * Return the synopsis of the movie past
+    * */
+    public Response getSynopsisById (String identifier) throws RemoteException
+    {
+        long start, end, diff;
+        start = System.nanoTime();
+        int id = Integer.parseInt(identifier);
+        String str = movies.get(id).getSynopsis();
+        
+        end = System.nanoTime();
+        diff = end-start;
+        System.err.println(diff);
+        
+        Response response = new Response(str, diff);
+
+        return response;
+    }
+    /*
+    * Return the all info of the movie past
+    * */
+    public Response getInfoById (String identifier) throws RemoteException
+    {
+        long start, end, diff;
+        start = System.nanoTime();
+        int id = Integer.parseInt(identifier);
+        String str = movies.get(id).getAllInfo();
+        
+        end = System.nanoTime();
+        diff = end-start;
+        System.err.println(diff);
+        
+        Response response = new Response(str, diff);
+
+        return response;
+    }
+    /*
+    * Change the quantity available of the movie past
+    * */
+    public Response setQuantityOfMovie (String identifier, int quantity) throws RemoteException
+    {
+        long start, end, diff;
+        start = System.nanoTime();
+        int id = Integer.parseInt(identifier);
+        movies.get(id).setQuantity(quantity);
+
+        end = System.nanoTime();
+        diff = end-start;
+        System.err.println(diff);
+        
+        Response response = new Response("", diff);
+
+        return response;
+    }
+    /*
+    * Return the Quantity Disponible of the movie past
+    * */
+    public Response getQuantityOfMovie (String identifier) throws RemoteException
+    {
+        long start, end, diff;
+        start = System.nanoTime();
+        int id = Integer.parseInt(identifier);
+       
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(movies.get(id).getQuantity());
+
+        String str = stringBuilder.toString() + "\n";
+        end = System.nanoTime();
+        diff = end-start;
+        System.err.println(diff);
+        
+        Response response = new Response(str, diff);
+
+        return response;
+    }
+
+    public static void main(String args[]) {
+        
+        System.out.println("Iniciando servidor");
+        
+        try {
+            MovieRentalServer obj = new MovieRentalServer();
+            Naming.rebind("MovieRental", obj);
+            System.out.println("Servidor Inicializado");
+        } catch (Exception e) {
+            System.err.println("Erro no servidor: " + e);
+            e.printStackTrace();
+        }
+    }
+
     /*
     * Return all movies of SciFi genre
     * */
-    public String getAllSciFiMovies() throws RemoteException {
+    private String getAllSciFiMovies() throws RemoteException {
 
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(movies.get(0).getTitleAndYear());
@@ -98,7 +232,7 @@ public class Rental extends UnicastRemoteObject implements RentalInterface
     /*
     * Return all movies of Adventure genre
     * */
-    public  String getAllAdventureMovies()  throws RemoteException{
+    private  String getAllAdventureMovies()  throws RemoteException{
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(movies.get(2).getTitleAndYear());
         stringBuilder.append(movies.get(4).getTitleAndYear());
@@ -111,105 +245,10 @@ public class Rental extends UnicastRemoteObject implements RentalInterface
     /*
     * Return all movies of Adventure genre
     * */
-    public  String getAllRomanceMovies()  throws RemoteException{
+    private  String getAllRomanceMovies()  throws RemoteException{
 
         String str = movies.get(3).getTitleAndYear();
 
         return str;
     }
-    /*
-    * Returns a list of all the movies from the past type
-    * */
-    public String getAllTitlesAndYearByGenre(String genre)  throws RemoteException{
-        long start, end;
-        start = System.nanoTime();
-        int aux = Integer.parseInt(genre);
-        String str;
-        switch (aux)
-        {
-            case  0:
-                 str  = getAllAdventureMovies();
-            case  1:
-                 str = getAllRomanceMovies();
-            case  2:
-                str = getAllSciFiMovies();
-            default:
-                str = getAllMovies();
-        }
-
-        end = System.nanoTime();
-        System.err.println((end-start));
-        return str;
-    }
-
-    /*
-    * Return the synopsis of the movie past
-    * */
-    public String getSynopsisById (String identifier)  throws RemoteException
-    {
-        long start, end;
-        start = System.nanoTime();
-        int id = Integer.parseInt(identifier);
-        String str = movies.get(id).getSynopsis();
-        end = System.nanoTime();
-        System.err.println((end-start));
-        return str;
-    }
-    /*
-    * Return the all info of the movie past
-    * */
-    public String getInfoById (String identifier)  throws RemoteException
-    {
-        long start, end;
-        start = System.nanoTime();
-        int id = Integer.parseInt(identifier);
-        String str = movies.get(id).getAllInfo();
-        end = System.nanoTime();
-        System.err.println((end-start));
-        return str;
-    }
-    /*
-    * Change the quantity available of the movie past
-    * */
-    public void setQuantityOfMovie (String identifier, int quantity)  throws RemoteException
-    {
-        long start, end;
-        start = System.nanoTime();
-        int id = Integer.parseInt(identifier);
-        movies.get(id).setQuantity(quantity);
-
-        end = System.nanoTime();
-        System.err.println((end-start));
-    }
-    /*
-    * Return the Quantity Disponible of the movie past
-    * */
-    public String getQuantityOfMovie (String identifier)  throws RemoteException
-    {
-        long start, end;
-        start = System.nanoTime();
-        int id = Integer.parseInt(identifier);
-       
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(movies.get(id).getQuantity());
-
-        String str = stringBuilder.toString() + "\n";
-        end = System.nanoTime();
-        System.err.println((end-start));
-        return str;
-    }
-
-    public static void main(String args[]) {
-        System.out.println("Iniciando servidor");
-        try {
-            Rental obj = new Rental();
-            Registry reg = LocateRegistry.getRegistry();
-            reg.bind("Rental", obj);
-            System.out.println("Servidor Inicializado");
-        } catch (Exception e) {
-            System.err.println("Erro no servidor: " + e);
-            e.printStackTrace();
-        }
-    }
 }
-
