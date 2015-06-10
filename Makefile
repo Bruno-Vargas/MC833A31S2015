@@ -15,7 +15,7 @@ server: build
 client: build
 	java -classpath src \
 	-Djava.rmi.server.hostname=192.168.1.114 \
-	MovieRentalServer listTitlesAndYears
+	MovieRentalClient listTitlesAndYears
 
 clean:
 	rm -f src/*.class
