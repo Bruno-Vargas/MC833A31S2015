@@ -9,12 +9,12 @@ run: build
 
 server: build
 	java -classpath src \
-	-Djava.rmi.server.hostname=192.168.1.114 \
+	-Djava.rmi.server.hostname=192.168.1.156 \
 	MovieRentalServer
 
 client: build
 	java -classpath src \
-	-Djava.rmi.server.hostname=192.168.1.114 \
+	-Djava.rmi.server.hostname=192.168.1.156 \
 	MovieRentalClient listTitlesAndYears
 
 clean:

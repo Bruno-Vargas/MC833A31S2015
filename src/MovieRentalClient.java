@@ -10,7 +10,7 @@ public class MovieRentalClient {
         try {
             
             MovieRentalInterface rentalStub  = (MovieRentalInterface) Naming.lookup("//" +
-                "192.168.1.114" + 
+                "192.168.1.156" + 
                 "/MovieRental");
             long start, end, diff;
             Response response = new Response("", 1);
