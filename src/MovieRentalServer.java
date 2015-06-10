@@ -7,7 +7,7 @@ import java.rmi.server.*;
 import java.rmi.registry.*;
 import java.util.List;
 
-public class MovieRentalServer extends UnicastRemoteObject implements RentalInterface
+public class MovieRentalServer extends UnicastRemoteObject implements MovieRentalInterface
 {
     private Vector <Movie> movies;
     /*
@@ -204,7 +204,7 @@ public class MovieRentalServer extends UnicastRemoteObject implements RentalInte
         System.out.println("Iniciando servidor");
         
         try {
-            MovieRentalServer obj = new MovieRentalServer(args[0]);
+            MovieRentalServer obj = new MovieRentalServer();
             Naming.rebind("MovieRental", obj);
             System.out.println("Servidor Inicializado");
         } catch (Exception e) {
