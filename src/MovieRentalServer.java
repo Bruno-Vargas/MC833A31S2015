@@ -7,7 +7,7 @@ import java.rmi.server.*;
 import java.rmi.registry.*;
 import java.util.List;
 
-public class Rental extends UnicastRemoteObject implements RentalInterface
+public class MovieRentalServer extends UnicastRemoteObject implements RentalInterface
 {
     private Vector <Movie> movies;
     /*
@@ -21,7 +21,7 @@ public class Rental extends UnicastRemoteObject implements RentalInterface
         private int quantity;
     **/
 
-    public Rental()  throws RemoteException{
+    public MovieRentalServer()  throws RemoteException{
         this.movies = new Vector<Movie>();
 
         Movie movie1 = new Movie("Termianor", "ScienceFiction", "James Cameron", "", 1984, 108.f, 1, 2);
@@ -200,11 +200,12 @@ public class Rental extends UnicastRemoteObject implements RentalInterface
     }
 
     public static void main(String args[]) {
+        
         System.out.println("Iniciando servidor");
+        
         try {
-            Rental obj = new Rental();
-            Registry reg = LocateRegistry.getRegistry();
-            reg.bind("Rental", obj);
+            MovieRentalServer obj = new MovieRentalServer(args[0]);
+            Naming.rebind("MovieRental", obj);
             System.out.println("Servidor Inicializado");
         } catch (Exception e) {
             System.err.println("Erro no servidor: " + e);
@@ -212,4 +213,3 @@ public class Rental extends UnicastRemoteObject implements RentalInterface
         }
     }
 }
-

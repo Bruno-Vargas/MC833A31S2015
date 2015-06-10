@@ -1,14 +1,17 @@
 import java.rmi.*;
 import java.rmi.registry.*;
 
-public class LibraryClient {
+public class MovieRentalClient {
 
-    private LibraryClient() {}
+    private MovieRentalClient() {}
 
     public static void main(String args[]) {
+        
         try {
-            Registry reg = LocateRegistry.getRegistry("localhost");
-            RentalInterface stub  = (RentalInterface) reg.lookup("Rental");
+            
+            MovieRentalInterface rentalStub  = (MovieRentalInterface) Naming.lookup("//" +
+                "192.168.1.114" + 
+                "/MovieRental");
             long start, end;
 
             CommandParser parser = new CommandParser();
@@ -16,25 +19,25 @@ public class LibraryClient {
             start = System.nanoTime();
             switch (cmd.command) {
                 case LIST_ALL:
-                System.out.println(stub.getAllMovies());
+                System.out.println(rentalStub.getAllMovies());
                 break;
                 case LIST_ALL_TITLES_AND_YEARS:
-                System.out.println(stub.getAllNamesAndYears());
+                System.out.println(rentalStub.getAllNamesAndYears());
                 break;
                 case LIST_ALL_BY_GENRE:
-                System.out.println(stub.getAllTitlesAndYearByGenre(cmd.identifier));
+                System.out.println(rentalStub.getAllTitlesAndYearByGenre(cmd.identifier));
                 break;
                 case SYNOPISIS_BY_ID:
-                System.out.println(stub.getSynopsisById(cmd.identifier));
+                System.out.println(rentalStub.getSynopsisById(cmd.identifier));
                 break;
                 case INFO_BY_ID:
-                System.out.println(stub.getInfoById(cmd.identifier));
+                System.out.println(rentalStub.getInfoById(cmd.identifier));
                 break;
                 case QUANTITY_BY_ID:
-                System.out.println(stub.getQuantityOfMovie(cmd.identifier));
+                System.out.println(rentalStub.getQuantityOfMovie(cmd.identifier));
                 break;
                 case UPDATE_QUANTITY:
-                    stub.setQuantityOfMovie(cmd.identifier, cmd.quantity);
+                    rentalStub.setQuantityOfMovie(cmd.identifier, cmd.quantity);
                     System.out.println("Updated");
                 break;
             }
@@ -42,7 +45,7 @@ public class LibraryClient {
             System.err.println((end-start));
         }
         catch (Exception e) {
-            System.out.println("Erro: " + e.getMessage());
+            System.out.println("Error: " + e.getMessage());
             e.printStackTrace();
         }
     }

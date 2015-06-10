@@ -9,14 +9,13 @@ run: build
 
 server: build
 	java -classpath src \
-	-Djava.rmi.server.hostname=localhost \
-	-Djava.rmi.server.codebase=file:$(HOME)/Downloads/carta_aos_missionarios/projeto03/src/ \
-	Rental data/data.dump
+	-Djava.rmi.server.hostname=192.168.1.114 \
+	LibraryServer data/data.dump
 
 client: build
 	java -classpath src \
-	-Djava.rmi.server.hostname=localhost \
-	LibraryClient $(ARGS)
+	-Djava.rmi.server.hostname=192.168.1.114 \
+	LibraryClient listTitlesAndYears
 
 clean:
 	rm -f src/*.class

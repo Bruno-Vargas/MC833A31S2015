@@ -4,7 +4,7 @@
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
-public interface RentalInterface extends Remote{
+public interface MovieRentalInterface extends Remote {
 
     /*
      * Return All information of all movies of MovieRental
